@@ -1,0 +1,8 @@
+{
+  "src/**/*.{js,ts,jsx,tsx}": [
+    "eslint 'src/**' --fix"
+  ],
+  "*.md": [
+    "prettier"
+  ]
+}
