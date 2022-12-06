@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { HiOutlineBookOpen } from 'react-icons/hi';
+import { HiLanguage } from 'react-icons/hi2';
+import { GoPerson } from 'react-icons/go';
+
 import { Book } from '../models/Book';
 
 const Container = styled.div`
@@ -19,7 +23,7 @@ const BookContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
   width: 100%;
 
   text-align: center;
@@ -29,17 +33,73 @@ const BookContainer = styled.div`
   padding: 20px;
 `;
 
-const BookItem: React.FC<Book> = ({ title, languages, authors }) => (
+const BookInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 100%;
+
+  text-align: center;
+  border-radius: 8px;
+
+  padding: 20px;
+`;
+
+const BookContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 4px;
+`;
+
+const BookingButton = styled.button`
+  width: 100%;
+  max-width: 200px;
+  border-radius: 8px;
+
+  padding: 20px;
+  margin-left: auto;
+`;
+
+interface BookItemProps extends Book {
+  onClick({ title, firstAuthor }: { title: string; firstAuthor: string }): void;
+}
+
+const BookItem: React.FC<BookItemProps> = ({
+  title,
+  languages,
+  authors,
+  onClick,
+}) => (
   <BookContainer>
-    <p>{title}</p>
-    <p>{languages}</p>
-    {authors.map((author) => (
-      <p key={author.name}>{author.name}</p>
-    ))}
+    <BookInfo>
+      <BookContent>
+        <HiOutlineBookOpen size={20} />
+        <p>{title}</p>
+      </BookContent>
+      <BookContent>
+        <HiLanguage size={20} />
+        <p>{languages}</p>
+      </BookContent>
+      {authors.map((author) => (
+        <BookContent key={author.name}>
+          <GoPerson size={20} />
+          <p>{author.name}</p>
+        </BookContent>
+      ))}
+    </BookInfo>
+    <BookingButton
+      onClick={() => onClick({ title, firstAuthor: authors[0].name })}
+    >
+      Make a Booking
+    </BookingButton>
   </BookContainer>
 );
 
 const ListBooksPage: React.FC = () => {
+  const [username] = useState('tailvnll');
   const [books, setBooks] = useState<Book[]>([]);
   const [nextPage, setNextPage] = useState<string>('');
 
@@ -56,10 +116,46 @@ const ListBooksPage: React.FC = () => {
     getData();
   }, []);
 
+  const handleBookingClick = useCallback(
+    async ({ title, firstAuthor }: { title: string; firstAuthor: string }) => {
+      try {
+        const response = await fetch('http://localhost:3001/bookings', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json;charset=UTF-8',
+          },
+          body: JSON.stringify({
+            username,
+            title,
+            firstAuthor,
+          }),
+        });
+
+        const { startDate, endDate, message } = await response.json();
+
+        if (message) {
+          alert(message);
+          return;
+        }
+
+        alert(
+          `Booking successfully made for user ${username} from ${new Date(
+            startDate,
+          ).toLocaleDateString('en-GB')} until ${new Date(
+            endDate,
+          ).toLocaleDateString('en-GB')}`,
+        );
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [],
+  );
+
   return (
     <Container>
       {books.map((book) => (
-        <BookItem key={book.id} {...book} />
+        <BookItem key={book.id} {...book} onClick={handleBookingClick} />
       ))}
     </Container>
   );
