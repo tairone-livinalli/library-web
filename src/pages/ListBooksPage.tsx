@@ -119,7 +119,7 @@ const ListBooksPage: React.FC = () => {
   const handleBookingClick = useCallback(
     async ({ title, firstAuthor }: { title: string; firstAuthor: string }) => {
       try {
-        const response = await fetch('http://localhost:3001/bookings', {
+        const response = await fetch('http://localhost:3001/api/bookings', {
           method: 'POST',
           headers: {
             'content-type': 'application/json;charset=UTF-8',
