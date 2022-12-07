@@ -5,6 +5,7 @@ import { HiLanguage } from 'react-icons/hi2';
 import { GoPerson } from 'react-icons/go';
 
 import { Book } from '../models/Book';
+import { useUser } from '../hooks/useUser';
 
 const Container = styled.div`
   display: flex;
@@ -99,7 +100,7 @@ const BookItem: React.FC<BookItemProps> = ({
 );
 
 const ListBooksPage: React.FC = () => {
-  const [username] = useState('tailvnll');
+  const { username } = useUser();
   const [books, setBooks] = useState<Book[]>([]);
   const [nextPage, setNextPage] = useState<string>('');
 
@@ -149,7 +150,7 @@ const ListBooksPage: React.FC = () => {
         console.error(e);
       }
     },
-    [],
+    [username],
   );
 
   return (
