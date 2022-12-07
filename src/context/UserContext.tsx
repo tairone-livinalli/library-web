@@ -1,5 +1,7 @@
 import React, { createContext, useCallback, useState } from 'react';
 
+import env from '../config/env';
+
 interface SaveUsernameParams {
   newUsername: string;
 }
@@ -17,7 +19,7 @@ interface UserContextProps {
 
 const UserProvider: React.FC<UserContextProps> = ({ children }) => {
   const [username, setUsername] = useState(() => {
-    const localUsername = localStorage.getItem('@MyLibrary:username');
+    const localUsername = localStorage.getItem(env.USERNAME_KEY);
 
     return localUsername || '';
   });
@@ -25,7 +27,7 @@ const UserProvider: React.FC<UserContextProps> = ({ children }) => {
   const saveUsername = useCallback(({ newUsername }: SaveUsernameParams) => {
     if (!newUsername) throw new Error('Invalid username');
 
-    localStorage.setItem('@MyLibrary:usernamen', newUsername);
+    localStorage.setItem(env.USERNAME_KEY, newUsername);
     setUsername(newUsername);
   }, []);
 
