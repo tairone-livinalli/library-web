@@ -1,13 +1,14 @@
 import React from 'react';
-import { UserProvider } from './context/UserContext';
-import ListBooksPage from './pages/ListBooksPage';
+import { RouterProvider } from 'react-router-dom';
 
+import { UserProvider } from './context/UserContext';
+import router from './routes';
 import GlobalStyle from './styles';
 
 function App() {
   return (
     <UserProvider>
-      <ListBooksPage />
+      <RouterProvider router={router} />
       <GlobalStyle />
     </UserProvider>
   );

@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+
 import { useUser } from '../hooks/useUser';
 
 const Container = styled.div`
@@ -48,6 +50,7 @@ const UsernameButton = styled.button`
 const User = () => {
   const [username, setUsername] = useState('');
   const { saveUsername } = useUser();
+  const navigate = useNavigate();
 
   const handleChangeUsername = useCallback((newUsername: string) => {
     setUsername(newUsername);
@@ -55,6 +58,7 @@ const User = () => {
 
   const handleClickRegister = useCallback(() => {
     saveUsername({ newUsername: username });
+    navigate('/');
   }, [username]);
 
   return (
