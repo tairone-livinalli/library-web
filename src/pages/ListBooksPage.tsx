@@ -35,7 +35,7 @@ const ListBooksPage: React.FC = () => {
     setError('');
     const getData = async () => {
       try {
-        const data = await fetch('http://gutendex.com/bookss/');
+        const data = await fetch('http://gutendex.com/books/');
 
         const { results, next } = await data.json();
 
